@@ -28,6 +28,9 @@ class ImageAugmenterApp:
         messagebox.showinfo("Success", "Model loaded successfully!")
 
     def create_widgets(self):
+        screen_width = self.master.winfo_screenwidth()
+        screen_height = self.master.winfo_screenheight()
+
         left_frame = tk.Frame(self.master, width=400, height=500, bg='#f0f0f0')
         left_frame.pack(side=tk.LEFT, fill=tk.Y)
 
@@ -47,7 +50,7 @@ class ImageAugmenterApp:
         real_canvas_label.grid(row=0, column=0, padx=10, pady=10)  # Adjusted padx and pady for the label
         
         grayscale_canvas_label = tk.Label(right_frame, text="Grayscale Image", font=self.bold_font)
-        grayscale_canvas_label.grid(row=0, column=1, padx=10, pady=10)  # Adjusted padx and pady for the label
+        grayscale_canvas_label.grid(row=0, column=1, padx=10, pady=10)  #    Adjusted padx and pady for the label
         
         processed_canvas_label = tk.Label(right_frame, text="Augmented Image", font=self.bold_font)
         processed_canvas_label.grid(row=2, column=0, padx=10, pady=10)  # Adjusted padx and pady for the label
@@ -126,22 +129,15 @@ class ImageAugmenterApp:
         img = cv2.cvtColor(hsv, cv2.COLOR_HSV2RGB)
         return img
 
-    def augment_image(self):
+    def binarize_image(self):
         if self.original_image:
-            saturation_factor, rotation_angle, zoom_factor = self.random_augmentation_values()
             cv_image = np.array(self.original_image)
+            gray_image = cv2.cvtColor(cv_image, cv2.COLOR_RGB2GRAY)
             
-            cv_image = self.random_saturation(cv_image, saturation_factor)
+            # Binarization using Otsu's thresholding
+            _, binarized_image = cv2.threshold(gray_image, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
             
-            rows, cols = cv_image.shape[:2]
-            rotation_matrix = cv2.getRotationMatrix2D((cols / 2, rows / 2), rotation_angle, 1)
-            cv_image = cv2.warpAffine(cv_image, rotation_matrix, (cols, rows))
-            
-            zoomed_size = int(min(rows, cols) * zoom_factor)
-            resized_img = cv2.resize(cv_image, (zoomed_size, zoomed_size))
-            cropped_img = self.random_crop(resized_img)
-            
-            self.modified_image = Image.fromarray(cropped_img)
+            self.modified_image = Image.fromarray(binarized_image)
             self.display_image(self.modified_image, self.processed_canvas)
 
     def random_augmentation_values(self):
@@ -175,7 +171,7 @@ class ImageAugmenterApp:
         return feature_map
 
     def predict(self):
-        self.augment_image()
+        self.binarize_image()  # Using binarized image instead of augmented image
         time.sleep(2)
         img = Image.open(self.image_path)
         img = img.resize((128, 128))
