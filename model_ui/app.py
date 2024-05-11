@@ -32,28 +32,28 @@ class ImageAugmenterApp:
         left_frame.pack(side=tk.LEFT, fill=tk.Y)
 
         self.model_button = tk.Button(left_frame, bg='#8FBCBB', text="Load Model", command=self.load_model, height=2, width=20, font=self.bold_font)
-        self.model_button.pack(padx=40, pady=90)
-        
+        self.model_button.pack(padx=40, pady=(90, 20))  # Adjusted pady for the model button
+            
         self.add_image_button = tk.Button(left_frame, bg='#8FBCBB', text="Load Image", command=self.load_image, height=2, width=20, font=self.bold_font)
-        self.add_image_button.pack(padx=40, pady=50)
+        self.add_image_button.pack(padx=40, pady=20)  # Adjusted pady for the add image button
 
         self.predict_button = tk.Button(left_frame, bg='#8FBCBB', text="Predict", command=self.predict, height=2, width=20, font=self.bold_font)
-        self.predict_button.pack(padx=40,pady=90)
+        self.predict_button.pack(padx=40, pady=(20, 90))  # Adjusted pady for the predict button
 
         right_frame = tk.Frame(self.master, width=600, height=400)
         right_frame.pack(side=tk.LEFT, expand=True, fill=tk.BOTH)
         
         real_canvas_label = tk.Label(right_frame, text="Original Image",  font=self.bold_font)
-        real_canvas_label.grid(row=0, column=0)
+        real_canvas_label.grid(row=0, column=0, padx=10, pady=10)  # Adjusted padx and pady for the label
         
         grayscale_canvas_label = tk.Label(right_frame, text="Grayscale Image", font=self.bold_font)
-        grayscale_canvas_label.grid(row=0, column=1)
+        grayscale_canvas_label.grid(row=0, column=1, padx=10, pady=10)  # Adjusted padx and pady for the label
         
         processed_canvas_label = tk.Label(right_frame, text="Augmented Image", font=self.bold_font)
-        processed_canvas_label.grid(row=2, column=0)
+        processed_canvas_label.grid(row=2, column=0, padx=10, pady=10)  # Adjusted padx and pady for the label
         
         bw_canvas_label = tk.Label(right_frame, text="Detection",  font=self.bold_font)
-        bw_canvas_label.grid(row=2, column=1)
+        bw_canvas_label.grid(row=2, column=1, padx=10, pady=10)  # Adjusted padx and pady for the label
 
         self.real_canvas = tk.Canvas(right_frame, width=300, height=300, bg='#f0f0f0')
         self.real_canvas.grid(row=1, column=0, padx=10, pady=10, sticky='nsew')
@@ -69,6 +69,7 @@ class ImageAugmenterApp:
 
         self.prediction_label = tk.Label(right_frame, text="", font=self.bold_font)
         self.prediction_label.grid(row=5, column=0, padx=10, pady=10, sticky='nsew')
+
 
         for i in range(6):  
             right_frame.grid_rowconfigure(i, weight=1)
